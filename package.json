@@ -9,7 +9,7 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
+    "package": "ncc build -o dist/setup src/main.ts --license licenses.txt && ncc build -o dist/post src/post.ts --license licenses.txt",
     "all": "npm run build && npm run format && npm run lint && npm run package && echo"
   },
   "repository": {
