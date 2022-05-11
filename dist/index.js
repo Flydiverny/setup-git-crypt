@@ -56,16 +56,13 @@ function run() {
             else {
                 const destination = path.join(os.homedir(), '.git-crypt');
                 core.info(`Install destination is ${destination}`);
-                core.info(`Installing ${version} from https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`);
                 const downloaded = yield tc.downloadTool(`https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`);
                 const extractedPath = yield tc.extractTar(downloaded, destination);
                 const workspace = path.join(extractedPath, `git-crypt-${version}`);
                 core.info(`Extracted ${downloaded} to ${extractedPath}`);
-                yield exec.getExecOutput('ls', ['-la', workspace]);
                 yield exec.getExecOutput('make', ['install', `PREFIX=${extractedPath}`], {
                     cwd: workspace
                 });
-                yield exec.getExecOutput('ls', ['-la', extractedPath]);
                 toolPath = yield tc.cacheDir(path.join(destination, 'bin'), 'git-crypt', version);
             }
             core.addPath(toolPath);
