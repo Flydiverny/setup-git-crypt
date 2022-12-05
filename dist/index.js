@@ -60,7 +60,11 @@ function run() {
                 const extractedPath = yield tc.extractTar(downloaded, destination);
                 const workspace = path.join(extractedPath, `git-crypt-${version}`);
                 core.info(`Extracted ${downloaded} to ${extractedPath}`);
-                yield exec.getExecOutput('make', ['install', `PREFIX=${extractedPath}`], {
+                let extraArgs = [];
+                if (process.env.ImageOS === 'ubuntu22') {
+                    extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`];
+                }
+                yield exec.getExecOutput('make', ['install', `PREFIX=${extractedPath}`, ...extraArgs], {
                     cwd: workspace
                 });
                 toolPath = yield tc.cacheDir(path.join(destination, 'bin'), 'git-crypt', version);
