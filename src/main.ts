@@ -24,9 +24,19 @@ async function run(): Promise<void> {
       const workspace = path.join(extractedPath, `git-crypt-${version}`)
       core.info(`Extracted ${downloaded} to ${extractedPath}`)
 
-      await exec.getExecOutput('make', ['install', `PREFIX=${extractedPath}`], {
-        cwd: workspace
-      })
+      let extraArgs: string[] = []
+
+      if (process.env.ImageOS === 'ubuntu22') {
+        extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`]
+      }
+
+      await exec.getExecOutput(
+        'make',
+        ['install', `PREFIX=${extractedPath}`, ...extraArgs],
+        {
+          cwd: workspace
+        }
+      )
 
       toolPath = await tc.cacheDir(
         path.join(destination, 'bin'),
