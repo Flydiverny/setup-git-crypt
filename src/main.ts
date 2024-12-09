@@ -23,7 +23,7 @@ async function run(): Promise<void> {
       // )
 
       const downloaded = await tc.downloadTool(
-        `https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`,
+        `https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`
       )
 
       await copyFile(downloaded, path.join(destination, 'git-crypt'))
