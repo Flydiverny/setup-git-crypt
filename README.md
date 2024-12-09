@@ -22,8 +22,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: Flydiverny/setup-git-crypt@v1
+      - uses: actions/checkout@v4
+      - uses: Flydiverny/setup-git-crypt@v3
 ```
 
 In this example, the `setup-git-crypt` action is added as a step in the `build` job, and it will be run when the workflow is triggered. The `setup-git-crypt` action will install and configure git-crypt in the environment where the action is running, allowing you to use git-crypt in the rest of your workflow.
