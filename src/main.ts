@@ -3,6 +3,7 @@ import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
 import * as os from 'os'
 import * as path from 'path'
+import {copyFile} from 'fs/promises'
 
 async function run(): Promise<void> {
   const version = core.getInput('version')
@@ -21,10 +22,12 @@ async function run(): Promise<void> {
       //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
       // )
 
-      await tc.downloadTool(
+      const downloaded = await tc.downloadTool(
         `https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`,
         destination
       )
+
+      await copyFile(downloaded, path.join(destination, 'git-crypt'))
 
       // const extractedPath = await tc.extractTar(downloaded, destination)
       // const workspace = path.join(extractedPath, `git-crypt-${version}`)
@@ -44,7 +47,7 @@ async function run(): Promise<void> {
       //   }
       // )
 
-      toolPath = await tc.cacheDir(path.join(destination), 'git-crypt', version)
+      toolPath = await tc.cacheDir(destination, 'git-crypt', version)
     }
 
     core.addPath(toolPath)

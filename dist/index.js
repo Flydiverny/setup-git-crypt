@@ -44,6 +44,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const os = __importStar(__nccwpck_require__(2037));
 const path = __importStar(__nccwpck_require__(1017));
+const promises_1 = __nccwpck_require__(3292);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const version = core.getInput('version');
@@ -59,7 +60,8 @@ function run() {
                 // const downloaded = await tc.downloadTool(
                 //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
                 // )
-                yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`, destination);
+                const downloaded = yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`, destination);
+                yield (0, promises_1.copyFile)(downloaded, path.join(destination, 'git-crypt'));
                 // const extractedPath = await tc.extractTar(downloaded, destination)
                 // const workspace = path.join(extractedPath, `git-crypt-${version}`)
                 // core.info(`Extracted ${downloaded} to ${extractedPath}`)
@@ -74,7 +76,7 @@ function run() {
                 //     cwd: workspace
                 //   }
                 // )
-                toolPath = yield tc.cacheDir(path.join(destination), 'git-crypt', version);
+                toolPath = yield tc.cacheDir(destination, 'git-crypt', version);
             }
             core.addPath(toolPath);
         }
@@ -28721,6 +28723,14 @@ module.exports = require("events");
 
 "use strict";
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 3292:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs/promises");
 
 /***/ }),
 
