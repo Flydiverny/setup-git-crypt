@@ -61,6 +61,7 @@ function run() {
                 //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
                 // )
                 const downloaded = yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`);
+                yield (0, promises_1.mkdir)(destination, { recursive: true });
                 yield (0, promises_1.copyFile)(downloaded, path.join(destination, 'git-crypt'));
                 // const extractedPath = await tc.extractTar(downloaded, destination)
                 // const workspace = path.join(extractedPath, `git-crypt-${version}`)
