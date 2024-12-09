@@ -15,7 +15,7 @@ async function run(): Promise<void> {
     if (toolPath) {
       core.info(`Found in cache @ ${toolPath}`)
     } else {
-      const destination = path.join(os.homedir(), '.git-crypt')
+      const destination = path.join(os.homedir(), '.git-crypt/')
       core.info(`Install destination is ${destination}`)
 
       // const downloaded = await tc.downloadTool(
@@ -24,7 +24,6 @@ async function run(): Promise<void> {
 
       const downloaded = await tc.downloadTool(
         `https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`,
-        destination
       )
 
       await copyFile(downloaded, path.join(destination, 'git-crypt'))

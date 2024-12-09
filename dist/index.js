@@ -55,12 +55,12 @@ function run() {
                 core.info(`Found in cache @ ${toolPath}`);
             }
             else {
-                const destination = path.join(os.homedir(), '.git-crypt');
+                const destination = path.join(os.homedir(), '.git-crypt/');
                 core.info(`Install destination is ${destination}`);
                 // const downloaded = await tc.downloadTool(
                 //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
                 // )
-                const downloaded = yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`, destination);
+                const downloaded = yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`);
                 yield (0, promises_1.copyFile)(downloaded, path.join(destination, 'git-crypt'));
                 // const extractedPath = await tc.extractTar(downloaded, destination)
                 // const workspace = path.join(extractedPath, `git-crypt-${version}`)
