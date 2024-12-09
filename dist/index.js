@@ -40,7 +40,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const exec = __importStar(__nccwpck_require__(1514));
+// import * as exec from '@actions/exec'
 const tc = __importStar(__nccwpck_require__(7784));
 const os = __importStar(__nccwpck_require__(2037));
 const path = __importStar(__nccwpck_require__(1017));
@@ -56,18 +56,25 @@ function run() {
             else {
                 const destination = path.join(os.homedir(), '.git-crypt');
                 core.info(`Install destination is ${destination}`);
-                const downloaded = yield tc.downloadTool(`https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`);
-                const extractedPath = yield tc.extractTar(downloaded, destination);
-                const workspace = path.join(extractedPath, `git-crypt-${version}`);
-                core.info(`Extracted ${downloaded} to ${extractedPath}`);
-                let extraArgs = [];
-                if (process.env.ImageOS === 'ubuntu22') {
-                    extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`];
-                }
-                yield exec.getExecOutput('make', ['install', `PREFIX=${extractedPath}`, ...extraArgs], {
-                    cwd: workspace
-                });
-                toolPath = yield tc.cacheDir(path.join(destination, 'bin'), 'git-crypt', version);
+                // const downloaded = await tc.downloadTool(
+                //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
+                // )
+                yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/v${version}/git-crypt-${version}-linux-x86_64`, destination);
+                // const extractedPath = await tc.extractTar(downloaded, destination)
+                // const workspace = path.join(extractedPath, `git-crypt-${version}`)
+                // core.info(`Extracted ${downloaded} to ${extractedPath}`)
+                // let extraArgs: string[] = []
+                // if (process.env.ImageOS === 'ubuntu22') {
+                //   extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`]
+                // }
+                // await exec.getExecOutput(
+                //   'make',
+                //   ['install', `PREFIX=${extractedPath}`, ...extraArgs],
+                //   {
+                //     cwd: workspace
+                //   }
+                // )
+                toolPath = yield tc.cacheDir(path.join(destination), 'git-crypt', version);
             }
             core.addPath(toolPath);
         }
