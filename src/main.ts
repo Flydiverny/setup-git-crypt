@@ -22,7 +22,7 @@ async function run(): Promise<void> {
       // )
 
       await tc.downloadTool(
-        `https://github.com/maxisam/git-crypt/releases/download/v${version}/git-crypt-${version}-linux-x86_64`,
+        `https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`,
         destination
       )
 
