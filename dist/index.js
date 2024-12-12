@@ -40,12 +40,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const exec = __importStar(__nccwpck_require__(1514));
+// import * as exec from '@actions/exec'
 const tc = __importStar(__nccwpck_require__(7784));
 const os = __importStar(__nccwpck_require__(2037));
 const path = __importStar(__nccwpck_require__(1017));
+const promises_1 = __nccwpck_require__(3292);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        if (process.env.ImageOS === 'ubuntu20') {
+            core.setFailed('Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher');
+            process.exit(1);
+        }
         const version = core.getInput('version');
         try {
             let toolPath = tc.find('git-crypt', version);
@@ -54,20 +59,13 @@ function run() {
                 core.info(`Found in cache @ ${toolPath}`);
             }
             else {
-                const destination = path.join(os.homedir(), '.git-crypt');
+                const destination = path.join(os.homedir(), '.git-crypt/');
                 core.info(`Install destination is ${destination}`);
-                const downloaded = yield tc.downloadTool(`https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`);
-                const extractedPath = yield tc.extractTar(downloaded, destination);
-                const workspace = path.join(extractedPath, `git-crypt-${version}`);
-                core.info(`Extracted ${downloaded} to ${extractedPath}`);
-                let extraArgs = [];
-                if (process.env.ImageOS === 'ubuntu22') {
-                    extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`];
-                }
-                yield exec.getExecOutput('make', ['install', `PREFIX=${extractedPath}`, ...extraArgs], {
-                    cwd: workspace
-                });
-                toolPath = yield tc.cacheDir(path.join(destination, 'bin'), 'git-crypt', version);
+                const downloaded = yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`);
+                yield (0, promises_1.mkdir)(destination, { recursive: true });
+                yield (0, promises_1.chmod)(downloaded, 0o755);
+                yield (0, promises_1.copyFile)(downloaded, path.join(destination, 'git-crypt'));
+                toolPath = yield tc.cacheDir(destination, 'git-crypt', version);
             }
             core.addPath(toolPath);
         }
@@ -28714,6 +28712,14 @@ module.exports = require("events");
 
 "use strict";
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 3292:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs/promises");
 
 /***/ }),
 
