@@ -47,6 +47,11 @@ const path = __importStar(__nccwpck_require__(1017));
 const promises_1 = __nccwpck_require__(3292);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        if (process.env.ImageOS === 'ubuntu20') {
+            core.error('Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher');
+            core.setFailed('Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher');
+            process.exit(1);
+        }
         const version = core.getInput('version');
         try {
             let toolPath = tc.find('git-crypt', version);
@@ -57,27 +62,10 @@ function run() {
             else {
                 const destination = path.join(os.homedir(), '.git-crypt/');
                 core.info(`Install destination is ${destination}`);
-                // const downloaded = await tc.downloadTool(
-                //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
-                // )
                 const downloaded = yield tc.downloadTool(`https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`);
                 yield (0, promises_1.mkdir)(destination, { recursive: true });
                 yield (0, promises_1.chmod)(downloaded, 0o755);
                 yield (0, promises_1.copyFile)(downloaded, path.join(destination, 'git-crypt'));
-                // const extractedPath = await tc.extractTar(downloaded, destination)
-                // const workspace = path.join(extractedPath, `git-crypt-${version}`)
-                // core.info(`Extracted ${downloaded} to ${extractedPath}`)
-                // let extraArgs: string[] = []
-                // if (process.env.ImageOS === 'ubuntu22') {
-                //   extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`]
-                // }
-                // await exec.getExecOutput(
-                //   'make',
-                //   ['install', `PREFIX=${extractedPath}`, ...extraArgs],
-                //   {
-                //     cwd: workspace
-                //   }
-                // )
                 toolPath = yield tc.cacheDir(destination, 'git-crypt', version);
             }
             core.addPath(toolPath);

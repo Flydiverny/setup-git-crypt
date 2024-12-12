@@ -6,6 +6,16 @@ import * as path from 'path'
 import {chmod, copyFile, mkdir} from 'fs/promises'
 
 async function run(): Promise<void> {
+  if (process.env.ImageOS === 'ubuntu20') {
+    core.error(
+      'Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher'
+    )
+    core.setFailed(
+      'Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher'
+    )
+    process.exit(1)
+  }
+
   const version = core.getInput('version')
 
   try {
@@ -18,10 +28,6 @@ async function run(): Promise<void> {
       const destination = path.join(os.homedir(), '.git-crypt/')
       core.info(`Install destination is ${destination}`)
 
-      // const downloaded = await tc.downloadTool(
-      //   `https://www.agwa.name/projects/git-crypt/downloads/git-crypt-${version}.tar.gz`
-      // )
-
       const downloaded = await tc.downloadTool(
         `https://github.com/maxisam/git-crypt/releases/download/${version}/git-crypt-${version}-linux-x86_64`
       )
@@ -30,24 +36,6 @@ async function run(): Promise<void> {
       await chmod(downloaded, 0o755)
 
       await copyFile(downloaded, path.join(destination, 'git-crypt'))
-
-      // const extractedPath = await tc.extractTar(downloaded, destination)
-      // const workspace = path.join(extractedPath, `git-crypt-${version}`)
-      // core.info(`Extracted ${downloaded} to ${extractedPath}`)
-
-      // let extraArgs: string[] = []
-
-      // if (process.env.ImageOS === 'ubuntu22') {
-      //   extraArgs = [`CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L'`]
-      // }
-
-      // await exec.getExecOutput(
-      //   'make',
-      //   ['install', `PREFIX=${extractedPath}`, ...extraArgs],
-      //   {
-      //     cwd: workspace
-      //   }
-      // )
 
       toolPath = await tc.cacheDir(destination, 'git-crypt', version)
     }
