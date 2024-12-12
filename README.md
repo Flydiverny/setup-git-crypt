@@ -3,8 +3,15 @@
 This is a GitHub Action for setting up git-crypt in a GitHub Actions workflow. Git-crypt is a tool for encrypting and decrypting files in a Git repository.
 The action will download the source for the git-crypt CLI and build it in runtime, it may also be cached in the tools cache.
 
-v4: works on ubuntu 22+
-v3: works on ubuntu 20 and 22
+**v4**:
+
+- works on ubuntu 22+
+- uses a fork of git-crypt https://github.com/maxisam/git-crypt/
+
+**v3**:
+
+- works on ubuntu 20 and 22
+- uses https://github.com/AGWA/git-crypt
 
 ## Pre-requisite for self-hosted runners
 
