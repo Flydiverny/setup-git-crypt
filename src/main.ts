@@ -3,7 +3,7 @@ import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
 import * as os from 'os'
 import * as path from 'path'
-import {copyFile, mkdir} from 'fs/promises'
+import {chmod, copyFile, mkdir} from 'fs/promises'
 
 async function run(): Promise<void> {
   const version = core.getInput('version')
@@ -27,6 +27,7 @@ async function run(): Promise<void> {
       )
 
       await mkdir(destination, {recursive: true})
+      await chmod(downloaded, 0o755)
 
       await copyFile(downloaded, path.join(destination, 'git-crypt'))
 
