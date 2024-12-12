@@ -48,7 +48,6 @@ const promises_1 = __nccwpck_require__(3292);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         if (process.env.ImageOS === 'ubuntu20') {
-            core.error('Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher');
             core.setFailed('Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher');
             process.exit(1);
         }

@@ -7,9 +7,6 @@ import {chmod, copyFile, mkdir} from 'fs/promises'
 
 async function run(): Promise<void> {
   if (process.env.ImageOS === 'ubuntu20') {
-    core.error(
-      'Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher'
-    )
     core.setFailed(
       'Please use previous version of setup-git-crypt, this version requires ubuntu22 or higher'
     )
