@@ -1,6 +1,6 @@
 name: 'Setup git-crypt'
 description: 'Setup git-crypt for use in github actions.'
-author: 'Flydiverny'
+author: 'Doktor.se'
 branding:
   icon: unlock
   color: purple
