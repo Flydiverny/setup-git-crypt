@@ -3,9 +3,16 @@
 This is a GitHub Action for setting up git-crypt in a GitHub Actions workflow. Git-crypt is a tool for encrypting and decrypting files in a Git repository.
 The action will download the source for the git-crypt CLI and build it in runtime, it may also be cached in the tools cache.
 
+**v5**:
+
+- works on ubuntu 22+
+- uses node24 runtime
+- uses a fork of git-crypt https://github.com/maxisam/git-crypt/
+
 **v4**:
 
 - works on ubuntu 22+
+- uses node20 runtime
 - uses a fork of git-crypt https://github.com/maxisam/git-crypt/
 
 **v3**:
@@ -32,11 +39,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: flydiverny/setup-git-crypt@v4
+      - uses: actions/checkout@v6
+      - uses: flydiverny/setup-git-crypt@v5
+      - run: git-crypt unlock
 ```
 
-In this example, the `setup-git-crypt` action is added as a step in the `build` job, and it will be run when the workflow is triggered. The `setup-git-crypt` action will install and configure git-crypt in the environment where the action is running, allowing you to use git-crypt in the rest of your workflow.
+### Specifying a version
+
+You can optionally specify a git-crypt version:
+
+```yaml
+- uses: flydiverny/setup-git-crypt@v5
+  with:
+    version: '0.8.1'
+```
 
 ## License
 
